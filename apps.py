@@ -1,21 +1,58 @@
-apps =  {'menu': {
-            'database': {
-                'name': 'menu',
+apps =  {
 
-                'administrator': {
-                
-                    'orders': {
+    'admin': {
 
-                        "submitted":[]
+        "database": {
 
-                        "accepted": []
+            "name": "menu",
 
-                        "finished": []
-  
-                    }
-                },
-             'routes': {}
-  },
-        'admin': {}
+            "administrator": {
+            
+                "orders": {
+
+                    "submitted":[]
+
+                    "accepted": []
+
+                    "finished": []
+
+                }
+            },
+        }
+            
+        "routes": {
+
+            "/login":{
+
+            },
+
+            "/orders":{
+
+            }
+
+        }
+
+
+    },
+
+    "menu": {
+
+        "database":[]
+
+        "routes": {
+
+            "/pages": {
+
+            },
+
+            "/data": {
+
+            }
+
+        }
+
+
     }
+
 }
+
