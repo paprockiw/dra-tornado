@@ -7,7 +7,17 @@ from fabric.api import env
 import database
 
 from server import runserver
-#from apps.apps import apps
+
+from apps import apps
+
+import os
+import sys
+
+# get the root path 
+path = os.path.realpath(os.path.realpath(__file__) + '/../')
+sys.path.append(path)
+
+
 
 env.hosts = ['localhost']
 
@@ -19,3 +29,8 @@ def init(app='all'):
     """
     # setup database
     database.setup(app)
+
+def server():
+
+    runserver(apps)
+

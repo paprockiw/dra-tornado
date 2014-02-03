@@ -5,10 +5,13 @@ import tornado.web
 
 from tornado.options import define, options
 
-def runserver():
+def runserver(apps):
+    
     define('port', default=8080, help='run on given port', type=int)
-    http_server = tornado.httpserver.HTTPServer(App())
-    http_server.listen(options.port)
+
+    httpServer = tornado.httpserver.HTTPServer(App(apps))
+
+    httpServer.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
 
 
@@ -21,11 +24,25 @@ class App(tornado.web.Application):
     '''
     Tornado server class.
     '''
-    def __init__(self):
-        settings = {'cookie_secret': 'swipetechnologies'}
-        # add code that takes the routes set up in apps and adds them to the 
-        # array as tuples here:
-        handlers = [(r'/', MainHandler),]
-        tornado.web.Application.__init__(self, handlers, **settings)
+    def __init__(self,apps):
+
+        self.apps = apps
+
+        self.settings = {
+            'cookie_secret': 'swipetechnologies'
+        }
+
+        
+        handlers = []
+
+        for app in self.apps:
+            for route in self.apps[app]['routes']:
+                handlers.append((r"%s" % route, MainHandler))
+               
+
+
+
+
+        tornado.web.Application.__init__(self, handlers, **self.settings)
 
 
