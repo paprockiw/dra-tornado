@@ -8,7 +8,7 @@ import os
 import sys
 import copy
 
-from apps.apps import apps
+from apps import apps
 
 # get the root path 
 path = os.path.realpath(os.path.realpath(__file__) + '/../')
@@ -37,18 +37,27 @@ def create_database(app):
     """
     Takes the name of an app and creates a database for it.
     """
+    print 'CREATE DB'
+    if 'database' in app:
+        print 'database in app', app['database']
+
+    if 'database' not in app:
+        print 'no db in app'
+        return
 
     server = couchdb.Server()
 
     if app['database']['name'] not in server:
+        print 'not in server'
 
         db = server.create(app['database']['name'])
         
         for key in app['database']:
 
-            if key not name:
+            if key != 'name':
 
                 db.save(app['database'][key])
+    else: print 'IN SERVER'
             
                 
 
@@ -62,9 +71,9 @@ def setup(id):
 
         for app in apps:
 
-            if apps[key].get('database'):
+            if apps[app].get('database'):
 
-                create_database(apps[key])
+                create_database(apps[app])
 
     else:
 
