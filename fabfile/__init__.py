@@ -1,36 +1,54 @@
 """
 runs fab commands for building and deploying projects
 """
-from fabric.api import task
-from fabric.api import env
-
-import database
-
-from server import runserver
-
-from apps import apps
 
 import os
 import sys
 
-# get the root path 
+from fabric.api import task, env, local, lcd
+
+from database import setup_database, clear_database
+from server import run_server
+from apps import apps
+
+# add to path so that we can import apps
 path = os.path.realpath(os.path.realpath(__file__) + '/../')
 sys.path.append(path)
 
-
-
 env.hosts = ['localhost']
 
-def init(app='all'):
-    """
-    Takes the name of an app as an argument and sets up a database for it 
-    based on the specified schema. With no arguments, it sets up all apps in 
-    apps directory.
-    """
-    # setup database
-    database.setup(app)
 
+def init():
+    """
+    initialize the databases and repositories for our apps
+    """
+    
+    for key in apps:
+
+        if 'database' in apps[key]:
+            setup_database(apps[key]['database'])
+
+        if 'repo' in apps[key]:
+            with lcd("apps"):
+                local("rm -rf "+key)
+                local("git clone "+apps[key]['repo']+" "+key)
+
+
+def clear():
+    """
+    clear database and repo for our apps
+    """
+
+    for key in apps:
+        if 'database' in apps[key]:
+            clear_database(apps[key]['database'])
+            local("rm -rf "+apps[key]['repo'])
+
+    
 def server():
+    """
+    run our tornado app
+    """
 
-    runserver(apps)
+    run_server(apps)
 
