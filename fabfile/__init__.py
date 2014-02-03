@@ -2,9 +2,10 @@
 runs fab commands for building and deploying projects
 """
 from fabric.api import task
+from fabric.api import env
 
 import database
-from apps.apps import apps
+#from apps.apps import apps
 
 env.hosts = ['localhost']
 
