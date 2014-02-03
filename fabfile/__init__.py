@@ -5,6 +5,8 @@ from fabric.api import task
 from fabric.api import env
 
 import database
+
+from server import runserver
 #from apps.apps import apps
 
 env.hosts = ['localhost']
