@@ -11,9 +11,9 @@ apps =  {
             },
         },
         "routes": {
-            "/login":{
+            "/login":{ 'request_handler': 'MainHandler'
             },
-            "/orders":{
+            "/orders":{ 'request_handler': 'MainHandler'
             }
         }
     },

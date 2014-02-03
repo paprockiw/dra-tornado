@@ -23,6 +23,8 @@ class App(tornado.web.Application):
     '''
     def __init__(self):
         settings = {'cookie_secret': 'swipetechnologies'}
+        # add code that takes the routes set up in apps and adds them to the 
+        # array as tuples here:
         handlers = [(r'/', MainHandler),]
         tornado.web.Application.__init__(self, handlers, **settings)
 
