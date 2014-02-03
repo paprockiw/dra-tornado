@@ -1,0 +1,3 @@
+CouchDB>=0.9
+Fabric>=1.6.1
+tornado>=3.1
