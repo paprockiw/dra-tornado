@@ -52,18 +52,3 @@ class App(tornado.web.Application):
                     self.handlers.append(( r"%s" % route, import_module(self.apps[app]['routes'][route]['request_handler']).RequestHandler ))      
 
         tornado.web.Application.__init__(self, self.handlers, **self.settings)
-
-
-
-class LoginHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Login")
-
-
-class DocumentHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Document")
-
-
-
-
