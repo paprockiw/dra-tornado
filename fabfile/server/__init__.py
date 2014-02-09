@@ -9,6 +9,9 @@ import tornado.web
 
 from tornado.options import define, options
 
+# use to dynamical import modules
+from importlib import import_module
+
 
 def run_server(apps):
     """
@@ -44,7 +47,9 @@ class App(tornado.web.Application):
         for app in self.apps:
             if 'routes' in self.apps[app]:
                 for route in self.apps[app]['routes']:
-                    self.handlers.append(( r"%s" % route, eval(self.apps[app]['routes'][route]['request_handler']) ))      
+                    # pdb = __import__('pdb')
+                    # pdb.set_trace()
+                    self.handlers.append(( r"%s" % route, import_module(self.apps[app]['routes'][route]['request_handler']).RequestHandler ))      
 
         tornado.web.Application.__init__(self, self.handlers, **self.settings)
 

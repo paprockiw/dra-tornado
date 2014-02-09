@@ -18,20 +18,45 @@ sys.path.append(path)
 env.hosts = ['localhost']
 
 
-def init():
+def init(app='all'):
     """
     initialize the databases and repositories for our apps
     """
     
-    for key in apps:
+    if app == 'all':
+        for key in apps:
 
-        if 'database' in apps[key]:
-            setup_database(apps[key]['database'])
+            if 'database' in apps[key]:
+                init_database(key)
 
-        if 'repo' in apps[key]:
-            with lcd("apps"):
-                local("rm -rf "+key)
-                local("git clone "+apps[key]['repo']+" "+key)
+            if 'repo' in apps[key]:
+                init_repo(key,apps[key]['repo'],apps[key]['branch'])
+
+    else:
+        if 'database' in apps[app]:
+            setup_database(app)
+        if 'repo' in apps[app]:
+            init_repo(app,apps[app]['repo'],apps[app]['branch'])
+
+
+def init_database(app):
+    """
+    initializes the database
+    """
+
+    setup_database(apps[app]['database'])
+
+
+def init_repo(app,repo,branch):
+    """
+    clones repo for app and sets the branch
+    """
+
+    with lcd("apps"):
+        local("rm -rf "+app)
+        local("git clone "+repo+" "+app)
+        with lcd(key):
+            local("git checkout "+branch)
 
 
 def clear():

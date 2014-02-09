@@ -14,29 +14,34 @@ def setup_database(database):
     setup couchdb database
     """
 
+    dbName = database.keys()[0]
+
     server = couchdb.Server()
 
-    if database['name'] not in server:
+    if dbName not in server:
 
-        db = server.create(database['name'])
+        db = server.create(dbName)
 
-        for key in database:
+        pdb = __import__('pdb')
+        pdb.set_trace()
 
-            if key != 'name':
-
-                db.save(database[key])
+        documents = database[database.keys()[0]]
 
 
-def clear_database(database):
+        for doc in documents:
+            db[doc] = documents[doc]
+
+
+def clear_database(name, database):
     """
     clear database from couchdb
     """
 
     server = couchdb.Server()
 
-    if database['name'] in server:
+    if name in server:
 
-        del server[database['name']]
+        del server[name]
 
 
 def view_function(path, f_type='map'):
