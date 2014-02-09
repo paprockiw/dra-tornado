@@ -42,7 +42,10 @@ def clear():
     for key in apps:
         if 'database' in apps[key]:
             clear_database(apps[key]['database'])
-            local("rm -rf "+apps[key]['repo'])
+        
+        if 'repo' in apps[key]:
+            with lcd("apps"):
+                local("rm -rf "+key)
 
     
 def server():
