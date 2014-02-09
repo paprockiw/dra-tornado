@@ -55,7 +55,7 @@ def init_repo(app,repo,branch):
     with lcd("apps"):
         local("rm -rf "+app)
         local("git clone "+repo+" "+app)
-        with lcd(key):
+        with lcd(app):
             local("git checkout "+branch)
 
 
