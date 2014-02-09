@@ -4,35 +4,47 @@ dictionary that we user for setting up our apps
 
 apps =  {
 
-    "admin": {
+    "menu-admin": {
 
-        # "repo":"https://github.com/ruahman/rpm-menu.git",
+        "repo":"https://github.com/ruahman/rpm-menu-admin.git",
+
+        "branch": "master",
 
         "database": {
-            "name": "rpm-menu",
-            "administrator": {
-                "orders": {
-                    "submitted":[],
-                    "accepted": [],
-                    "finished": []
+            "rpm-menu": { 
+                "administrator": {
+                    "users": {
+                        "administrator":"admin",
+                        "password":"swipe",
+                        "users":[]
+                    },
+                    "orders": {
+                        "submitted":[],
+                        "accepted": [],
+                        "finished": []
+                    }
                 }
-            },
+            }
         },
 
         "routes": {
-            "/login":{ 
-                'request_handler': 'LoginHandler'
+            #"login/(.+)"
+            "/login/(.+)":{ 
+                'request_handler': 'server.request_handlers.login'
             },
-            "/orders":{ 
-                'request_handler': 'DocumentHandler'
+            "/document/(.+)":{ 
+                'request_handler': 'server.request_handlers.document'
             }
         }
     },
 
     "menu": {
 
-        "repo":"https://github.com/ruahman/rpm-menu.git"
+        "repo":"https://github.com/ruahman/rpm-menu.git",
+
+        "branch": "master"
 
     }
+
 }
 
