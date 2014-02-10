@@ -20,13 +20,15 @@ apps =  {
                     },
                     "orders": {
                         "submitted":[],
-                        "accepted": [],
+                        "started": [],
                         "finished": []
                     }
                 }
             }
         },
 
+        # request_hander is the only key right now in each sub-dict.
+        # consider moving these to format like /login/(.+) : <REQUEST_HANDLER>
         "routes": {
             #"login/(.+)"
             "/login/(.+)":{ 
@@ -34,6 +36,9 @@ apps =  {
             },
             "/document/(.+)":{ 
                 'request_handler': 'server.request_handlers.document'
+            },
+            "/orders/(.+)": {
+                'request_handler': 'server.requerst_handlers.orders'
             }
         }
     },
