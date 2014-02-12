@@ -22,11 +22,7 @@ def setup_database(database):
 
         db = server.create(dbName)
 
-        pdb = __import__('pdb')
-        pdb.set_trace()
-
         documents = database[database.keys()[0]]
-
 
         for doc in documents:
             db[doc] = documents[doc]

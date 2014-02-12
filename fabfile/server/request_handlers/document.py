@@ -6,6 +6,9 @@ import tornado.gen
 
 import tornado.httpclient
 
+import pdb
+
+
 class RequestHandler(tornado.web.RequestHandler):
 
 
@@ -82,12 +85,19 @@ class RequestHandler(tornado.web.RequestHandler):
         """
         get document then return property specified from path
         """
+        
 
         doc = yield self.get_doc(url)
+
+
+
         data = yield self.get_prop(\
             doc=doc,\
             path=path\
             )
+
+
+
         raise tornado.gen.Return(data)
 
 

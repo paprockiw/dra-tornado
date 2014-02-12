@@ -38,7 +38,7 @@ apps =  {
                 'request_handler': 'server.request_handlers.document'
             },
             "/orders/(.+)": {
-                'request_handler': 'server.requerst_handlers.orders'
+                'request_handler': 'server.request_handlers.orders'
             }
         }
     },
