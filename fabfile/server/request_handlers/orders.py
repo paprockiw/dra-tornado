@@ -6,7 +6,7 @@ import tornado.httpclient
 
 import document
 
-import pdb
+# import pdb
 
 class RequestHandler(document.RequestHandler):
 
@@ -48,8 +48,6 @@ class RequestHandler(document.RequestHandler):
 
             order['datatime'] = time.strftime("%m/%d/%Y %I:%M:%S")
 
-            order['datatime'] = order['datatime'] 
-
             orders.append(order)
 
             resp = yield self.save_data(\
@@ -57,6 +55,9 @@ class RequestHandler(document.RequestHandler):
                 path="orders/submitted".split('/'),\
                 data=orders\
                 )
+
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/submitted",method='POST', headers=None, body="")
+            
 
             raise tornado.gen.Return(True)
 
@@ -89,6 +90,10 @@ class RequestHandler(document.RequestHandler):
                 path="orders/started".split('/'),\
                 data=started\
                 )
+
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/submitted",method='POST', headers=None, body="")
+            
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/started",method='POST', headers=None, body="")
                 
             raise tornado.gen.Return(True)
 
@@ -123,6 +128,10 @@ class RequestHandler(document.RequestHandler):
                 path="orders/finished".split('/'),\
                 data=finished\
                 )
+
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/started",method='POST', headers=None, body="")
+            
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/finished",method='POST', headers=None, body="")
 
             raise tornado.gen.Return(True)
 

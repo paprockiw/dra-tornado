@@ -30,7 +30,6 @@ apps =  {
         # request_hander is the only key right now in each sub-dict.
         # consider moving these to format like /login/(.+) : <REQUEST_HANDLER>
         "routes": {
-            #"login/(.+)"
             "/login/(.+)":{ 
                 'request_handler': 'server.request_handlers.login'
             },
@@ -39,6 +38,9 @@ apps =  {
             },
             "/orders/(.+)": {
                 'request_handler': 'server.request_handlers.orders'
+            },
+            "/comet/(.+)": {
+                'request_handler': 'server.request_handlers.comet'
             }
         }
     },
