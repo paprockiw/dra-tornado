@@ -6,7 +6,7 @@ apps =  {
 
     "menu-admin": {
 
-        "repo":"https://github.com/ruahman/rpm-menu-admin.git",
+        "repo":"https://github.com/ruahman/rpm-angular-react.git",
 
         "branch": "master",
 
@@ -17,6 +17,11 @@ apps =  {
                         "administrator":"admin",
                         "password":"swipe",
                         "users":[]
+                    },
+                    "data": {
+                        "menu":{
+                            "categories":[]
+                        }
                     },
                     "orders": {
                         "submitted":[],
@@ -47,7 +52,7 @@ apps =  {
 
     "menu": {
 
-        "repo":"https://github.com/ruahman/rpm-menu.git",
+        "repo":"https://github.com/ruahman/rpm-angular-react.git",
 
         "branch": "master"
 

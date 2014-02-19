@@ -28,7 +28,7 @@ def setup_database(database):
             db[doc] = documents[doc]
 
 
-def clear_database(name, database):
+def clear_database(name):
     """
     clear database from couchdb
     """

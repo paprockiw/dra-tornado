@@ -6,7 +6,7 @@ import tornado.gen
 
 import tornado.httpclient
 
-import pdb
+# import pdb
 
 
 class RequestHandler(tornado.web.RequestHandler):
@@ -121,7 +121,10 @@ class RequestHandler(tornado.web.RequestHandler):
 
         prop = doc
         for key in path:
-            prop = prop[key]
+            if key.isdigit():
+                prop = prop[int(key)]
+            else:
+                prop = prop[key]
 
         raise tornado.gen.Return(prop)
 
