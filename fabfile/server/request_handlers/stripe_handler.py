@@ -1,22 +1,5 @@
 import stripe
 
-# OLD VERSION:
-#class Stripe(tornado.web.RequestHandler):
-#    def post(self):
-#        token = self.get_argument('stripeToken')
-#        #self.write(token)
-#        # Store key in separate config?
-#        stripe.api_key = 'zGG4QHGhMlBElVBCioobCucrHJdaoeFP'
-#        charge = stripe.Charge.create(
-#				 amount = 1000, # amt in cents
-#				 currency = 'usd',
-#				 card = token,
-#				 description = 'samplepayment'
-#		)
-#        print charge
-#        self.write('payment accepted')
-
-
 stripe.api_key = 'zGG4QHGhMlBElVBCioobCucrHJdaoeFP'
 
 def post_to_stripe(order_data):
@@ -36,3 +19,15 @@ def post_to_stripe(order_data):
          )
     return charge
 
+def check_payment(stripe_data, **kwargs):
+    '''
+    Takes a dictionary of stripe data and kwargs that represent keys in the 
+    dictionary and the values that each key should have. Checks the dictionary 
+    to see that each key yields the desired value. Returns true if so,
+    false if not.
+    '''
+    for key in kwargs.keys():
+        if kwargs[key] != stripe_data[key]:
+            print stripe_date[key]
+            return False
+    return True

@@ -6,7 +6,7 @@ import tornado.httpclient
 
 import document
 
-from stripe_handler import post_to_stripe
+from stripe_handler import post_to_stripe, check_payment
 
 #import pdb
 
@@ -120,13 +120,19 @@ class RequestHandler(document.RequestHandler):
             )
 
             # somewhere here process stripe
-            processed = post_to_stripe(order)
-            print '-'*50
-            print 'SRIPE ORDER INFO:'
-            print processed
-            print
+#            print '-'*50
+#            print 'SRIPE ORDER INFO:'
+            try:
+                processed = post_to_stripe(order)
+#                print processed
+                if check_payment(processed, paid=True, \
+                        refunded=False, disputed=False):
+                    finished.append(order)
+            except Exception as e:
+                print 'STRIPE ERROR:'
+                print e
+                print
             
-            finished.append(order)
 
             resp = yield self.save_data(\
                 url="http://localhost:5984/rpm-menu/administrator",\
