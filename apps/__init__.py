@@ -27,6 +27,9 @@ apps =  {
                         "submitted":[],
                         "started": [],
                         "finished": []
+                    },
+                    "pages":{
+                        "pages":[]
                     }
                 }
             }
@@ -43,6 +46,9 @@ apps =  {
             },
             "/orders/(.+)": {
                 'request_handler': 'server.request_handlers.orders'
+            },
+            "/upload/(.+)": {
+                'request_handler': 'server.request_handlers.upload'
             },
             "/comet/(.+)": {
                 'request_handler': 'server.request_handlers.comet'

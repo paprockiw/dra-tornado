@@ -4,3 +4,5 @@
 env
 apps/menu/
 apps/menu-admin/
+nginx
+nginx-src

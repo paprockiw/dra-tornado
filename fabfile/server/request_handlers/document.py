@@ -6,7 +6,7 @@ import tornado.gen
 
 import tornado.httpclient
 
-# import pdb
+import pdb
 
 
 class RequestHandler(tornado.web.RequestHandler):
@@ -27,14 +27,19 @@ class RequestHandler(tornado.web.RequestHandler):
 
         # property of document
         path = param.split('/')[2:]
-        
+
         # get the document then extract prop
         data = yield self.get_data(\
             url="http://localhost:5984/"+database+"/"+_id,\
             path=path\
             )
 
-        self.finish(data)
+        if type(data) == list:
+            self.finish({
+                "list": data
+                })
+        else:
+            self.finish(data)
 
 
     @tornado.gen.coroutine
@@ -57,8 +62,6 @@ class RequestHandler(tornado.web.RequestHandler):
         # data for updating the document
         # data = json.loads(self.get_argument('data'))
         data = json.loads(self.request.body)
-
-        print data
         
         # save doc based on data
         resp = yield self.save_data(\
@@ -118,6 +121,7 @@ class RequestHandler(tornado.web.RequestHandler):
         """
         extract data from doc using path
         """
+
 
         prop = doc
         for key in path:
