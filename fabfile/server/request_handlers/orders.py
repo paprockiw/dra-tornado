@@ -6,7 +6,9 @@ import tornado.httpclient
 
 import document
 
-# import pdb
+from stripe_handler import post_to_stripe, check_payment
+
+#import pdb
 
 class RequestHandler(document.RequestHandler):
 
@@ -33,8 +35,6 @@ class RequestHandler(document.RequestHandler):
     @tornado.web.asynchronous
     def post(self, param):
 
-        # pdb.set_trace()
-
 
         @tornado.gen.coroutine
         def submitted(order):
@@ -57,13 +57,13 @@ class RequestHandler(document.RequestHandler):
                 )
 
             resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/submitted",method='POST', headers=None, body="")
-            
 
             raise tornado.gen.Return(True)
 
 
         @tornado.gen.coroutine
         def started(order):
+            print order
 
             submitted = yield self.get_data(\
                 url="http://localhost:5984/rpm-menu/administrator",\
@@ -100,7 +100,7 @@ class RequestHandler(document.RequestHandler):
 
         @tornado.gen.coroutine
         def finished(order):
-            
+            print order 
             started = yield self.get_data(\
                 url="http://localhost:5984/rpm-menu/administrator",\
                 path="orders/started".split('/')\
@@ -120,8 +120,19 @@ class RequestHandler(document.RequestHandler):
             )
 
             # somewhere here process stripe
-
-            finished.append(order)
+#            print '-'*50
+#            print 'SRIPE ORDER INFO:'
+            try:
+                processed = post_to_stripe(order)
+#                print processed
+                if check_payment(processed, paid=True, \
+                        refunded=False, disputed=False):
+                    finished.append(order)
+            except Exception as e:
+                print 'STRIPE ERROR:'
+                print e
+                print
+            
 
             resp = yield self.save_data(\
                 url="http://localhost:5984/rpm-menu/administrator",\
