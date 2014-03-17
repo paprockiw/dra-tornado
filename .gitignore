@@ -4,5 +4,10 @@
 env
 apps/menu/
 apps/menu-admin/
+apps/comic/
+apps/comic-admin/
+apps/root/
+apps/admin/
 nginx
 nginx-src
+
