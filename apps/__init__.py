@@ -58,6 +58,9 @@ apps =  {
             },
             "/comet/(.+)": {
                 'request_handler': 'server.request_handlers.comet'
+            },
+            "/seo/(.+)": {
+                'request_handler': 'server.request_handlers.seo'
             }
         }
     },

@@ -1,5 +1,7 @@
 import json
 
+import urllib
+
 import tornado.web
 
 import tornado.gen
@@ -69,6 +71,14 @@ class RequestHandler(tornado.web.RequestHandler):
             path=path,\
             data=data\
             )
+
+        # # setup sitemap
+        # post_data = {}
+        # body = urllib.urlencode(post_data)
+
+        # seo = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/seo/"+database,method='POST', headers=None, body=body)
+
+        # print seo
 
         
         self.finish(resp)
