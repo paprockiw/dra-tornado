@@ -4,11 +4,41 @@ import tornado.web
 import tornado.gen
 import tornado.httpclient
 
+import stripe
+
 import document
 
-from stripe_handler import post_to_stripe, check_payment
+stripe.api_key = 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
 
-#import pdb
+def post_to_stripe(order_data):
+    '''
+    Takes order data dict, extracts necessary data, and passes it to stripe 
+    for processing.
+    '''
+    token = order_data['token']
+    sub_total = int(order_data['subtotal'])
+    tax = int(order_data['tax'])
+    total = sub_total + tax
+    charge = stripe.Charge.create(
+         amount = total, # amt in cents
+         currency = 'usd',
+         card = token,
+         description = 'samplepayment'
+         )
+    return charge
+
+def check_payment(stripe_data, **kwargs):
+    '''
+    Takes a dictionary of stripe data and kwargs that represent keys in the 
+    dictionary and the values that each key should have. Checks the dictionary 
+    to see that each key yields the desired value. Returns true if so,
+    false if not.
+    '''
+    for key in kwargs.keys():
+        if kwargs[key] != stripe_data[key]:
+            print stripe_date[key]
+            return False
+    return True
 
 class RequestHandler(document.RequestHandler):
 
@@ -42,89 +72,87 @@ class RequestHandler(document.RequestHandler):
             import time
 
             orders = yield self.get_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/submitted".split('/')\
             )
 
-            order['datatime'] = time.strftime("%m/%d/%Y %I:%M:%S")
+            order['time'] = time.strftime("%m/%d/%Y %I:%M:%S")
 
             orders.append(order)
 
             resp = yield self.save_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/submitted".split('/'),\
                 data=orders\
                 )
 
-            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/submitted",method='POST', headers=None, body="")
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders-submitted",method='POST', headers=None, body="")
 
             raise tornado.gen.Return(True)
 
 
         @tornado.gen.coroutine
         def started(order):
-            print order
 
             submitted = yield self.get_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/submitted".split('/')\
             )
 
-            submitted = [ x for x in submitted if x['datatime'] != order['datatime'] ]
+            submitted = [ x for x in submitted if x['token'] != order['token'] ]
 
-            resp = yield self.save_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+            yield self.save_data(\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/submitted".split('/'),\
                 data=submitted\
                 )
 
             started = yield self.get_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/started".split('/')\
             )
 
             started.append(order)
 
-            resp = yield self.save_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+            yield self.save_data(\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/started".split('/'),\
                 data=started\
                 )
 
-            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/submitted",method='POST', headers=None, body="")
+            yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders-submitted",method='POST', headers=None, body="")
             
-            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/started",method='POST', headers=None, body="")
+            yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders-started",method='POST', headers=None, body="")
                 
             raise tornado.gen.Return(True)
 
 
         @tornado.gen.coroutine
         def finished(order):
-            print order 
+            
             started = yield self.get_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/started".split('/')\
             )
 
-            started = [ x for x in started if x['datatime'] != order['datatime'] ]
+            started = [ x for x in started if x['token'] != order['token'] ]
 
             resp = yield self.save_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/started".split('/'),\
                 data=started\
                 )
 
             finished = yield self.get_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/finished".split('/')\
             )
 
-            # somewhere here process stripe
-#            print '-'*50
-#            print 'SRIPE ORDER INFO:'
+          
             try:
+                
                 processed = post_to_stripe(order)
-#                print processed
+
                 if check_payment(processed, paid=True, \
                         refunded=False, disputed=False):
                     finished.append(order)
@@ -132,31 +160,52 @@ class RequestHandler(document.RequestHandler):
                 print 'STRIPE ERROR:'
                 print e
                 print
+
             
+            finished.append(order)
 
             resp = yield self.save_data(\
-                url="http://localhost:5984/rpm-menu/administrator",\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
                 path="orders/finished".split('/'),\
                 data=finished\
                 )
 
-            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/started",method='POST', headers=None, body="")
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders-started",method='POST', headers=None, body="")
             
-            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders/finished",method='POST', headers=None, body="")
+            resp = yield tornado.httpclient.AsyncHTTPClient().fetch("http://localhost/api/comet/orders-finished",method='POST', headers=None, body="")
 
             raise tornado.gen.Return(True)
 
 
+        @tornado.gen.coroutine
+        def cancel(order):
+
+
+            orders = yield self.get_data(\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
+                path="orders/submitted".split('/')\
+            )
+
+            orders = [ x for x in orders if x['token'] != order['token'] ]
+
+            yield self.save_data(\
+                url="http://localhost:5984/"+param.split('/')[0]+"/administrator",\
+                path=("orders/"+param.split('/')[2]).split('/'),\
+                data=orders\
+                )
+           
+            raise tornado.gen.Return(True)
 
 
         d = {'submitted': submitted,
              'started': started,
-             'finished': finished 
+             'finished': finished,
+             'cancel': cancel 
             }
 
         order = json.loads(self.request.body)
 
-        yield d[param](order)
+        yield d[param.split('/')[1]](order)
 
         self.finish()
         
