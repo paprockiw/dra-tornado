@@ -51,6 +51,7 @@ class RequestHandler(tornado.web.RequestHandler):
         move latest uploaded file path and create 4 new images
         """
 
+        # pdb.set_trace()
 
         ### move latest uploaded image ###
 
