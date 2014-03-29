@@ -1,7 +1,10 @@
+"""
+This is the request handler incharge of login in users
+"""
+
 import json
 
 import tornado.web
-
 import tornado.gen
 
 import document
@@ -18,53 +21,38 @@ class RequestHandler(document.RequestHandler):
         if anything wrong happens an exception is thrown
         """
 
-        # response we send back
-        response = {
-            'login':False
-        }
-
-
+        # extact database from path
         database = param.split('/')[0]
 
-        print database
-
-        # _id of document
+        # extract id of document
         _id = param.split('/')[1]
 
-        print _id
-
-        # path to property 
+        # extact path to property of document 
         path = param.split('/')[2:]
 
-        print path
-
-        # get username
-        # username = self.get_argument('username')
-
+        # get post data
         data = json.loads(self.request.body)
 
+        # extract username from data
         username = data['username']
 
-        print username
-
+        # extract password from data
         password = data['password']
 
-        print password
-
+        # get users 
         users = yield self.get_data(\
             url="http://localhost:5984/"+database+"/"+_id,\
             path=path\
             )
 
-        print users
-
+        # check is username is administrator
         if username == users['administrator']:
 
+            # check if password is correct
             if users['password'] == password:
 
+                # assign secrit cookie
                 self.set_secure_cookie("login", 'true',  expires_days=None)
-
-                response['login'] = True
 
             else:
 
@@ -75,7 +63,7 @@ class RequestHandler(document.RequestHandler):
             self.return_error('incorect username')
 
 
-        self.finish(response)
+        self.finish()
 
 
 
