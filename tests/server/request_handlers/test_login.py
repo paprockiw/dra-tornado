@@ -2,7 +2,6 @@
 test login request handler
 """
 
-import os
 import sys
 import json
 
@@ -15,11 +14,6 @@ from nose.tools import assert_is_not_none
 import tornado
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
-
-## get login request handler ##
-
-path = os.path.realpath(os.path.realpath(__file__) + '/../../../../fabfile/')
-sys.path.append(path)
 
 from server.request_handlers import login
 
