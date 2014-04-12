@@ -1,3 +1,7 @@
+"""
+test login request handler
+"""
+
 import os
 import sys
 import json
@@ -12,11 +16,14 @@ import tornado
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
 
-# add to sys.path
+## get login request handler ##
+
 path = os.path.realpath(os.path.realpath(__file__) + '/../../../../fabfile/')
 sys.path.append(path)
 
 from server.request_handlers import login
+
+import pdb
 
  
 class Login(AsyncHTTPTestCase):
@@ -38,7 +45,7 @@ class Login(AsyncHTTPTestCase):
     def test_case1(self):
         """
         if correct username and password is submited,
-        it should return OK
+        it should return OK and set login cookie
         """
 
         request = tornado.httpclient.HTTPRequest(\
@@ -52,6 +59,7 @@ class Login(AsyncHTTPTestCase):
 
         assert_equals(response.reason,'OK')
         assert_is_none(response.error)
+        assert_equals('login' in response.headers['Set-Cookie'],True)
 
 
 

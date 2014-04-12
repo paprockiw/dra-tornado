@@ -47,8 +47,8 @@ apps =  {
             "/login/(.+)":{ 
                 'request_handler': 'server.request_handlers.login'
             },
-            "/document/(.+)":{ 
-                'request_handler': 'server.request_handlers.document'
+            "/document-secure/(.+)":{ 
+                'request_handler': 'server.request_handlers.pages_secure'
             },
             "/orders/(.+)": {
                 'request_handler': 'server.request_handlers.orders'

@@ -24,7 +24,7 @@ class RequestHandler(document.RequestHandler):
         # extact database from path
         database = param.split('/')[0]
 
-        # extract id of document
+        # extract document _id 
         _id = param.split('/')[1]
 
         # extact path to property of document 
@@ -53,17 +53,20 @@ class RequestHandler(document.RequestHandler):
 
                 # assign secrit cookie
                 self.set_secure_cookie("login", 'true',  expires_days=None)
+                self.finish()
 
+            # incorect password
             else:
 
                 self.return_error('incorect password')
 
+        # incorrect username
         else:
 
             self.return_error('incorect username')
 
 
-        self.finish()
+        
 
 
 
