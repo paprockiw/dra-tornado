@@ -2,6 +2,8 @@
 module for setting up the tornado app for our project
 """
 
+import os, sys
+
 # use to dynamical import modules
 from importlib import import_module
 
@@ -16,6 +18,8 @@ import apps
 
 import pdb
 
+
+sys.path.insert(0, os.path.abspath(''))
 
 def run():
     """
