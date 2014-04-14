@@ -1,5 +1,5 @@
 """
-runs fab commands for building and deploying projects
+fab commands for building and deploying projects
 """
 
 import os
@@ -7,76 +7,85 @@ import sys
 
 from fabric.api import task, env, local, lcd
 
-from database import setup_database, clear_database
-from server import run_server
-from apps import apps
+import database
+import apps
+from server import run
 
-# add to path so that we can import apps
-path = os.path.realpath(os.path.realpath(__file__) + '/../')
-sys.path.append(path)
+
+import pdb
 
 env.hosts = ['localhost']
 
 
 def init(app='all'):
     """
-    initialize the databases and repositories for our apps
+    initialize the databases and apps for our project
     """
+
+    def init_repo(app, repo, branch):
+        """
+        init repository
+        """
+
+        with lcd("apps"):
+            local("rm -rf "+app)
+            local("git clone "+repo+" "+app)
+            with lcd(app):
+                local("git checkout "+branch)
     
     if app == 'all':
-        for key in apps:
 
-            if 'database' in apps[key]:
-                init_database(key)
+        for key in apps.apps:
 
-            if 'repo' in apps[key]:
-                init_repo(key,apps[key]['repo'],apps[key]['branch'])
+            if 'databaseName' in apps.apps[key]:
+                database.init(key)
+
+            if 'repo' in apps.apps[key]:
+                init_repo(key,apps.apps[key]['repo'],apps.apps[key]['branch'])
 
     else:
-        if 'database' in apps[app]:
-            setup_database(app)
-        if 'repo' in apps[app]:
-            init_repo(app,apps[app]['repo'],apps[app]['branch'])
+
+        if 'databaseName' in apps.apps[app]:
+            database.init(app)
+
+        if 'repo' in apps.apps[app]:
+            init_repo(app, apps.apps[app]['repo'], apps.apps[app]['branch'])
 
 
-def init_database(app):
-    """
-    initializes the database
-    """
-
-    setup_database(apps[app]['database'])
-
-
-def init_repo(app,repo,branch):
-    """
-    clones repo for app and sets the branch
-    """
-
-    with lcd("apps"):
-        local("rm -rf "+app)
-        local("git clone "+repo+" "+app)
-        with lcd(app):
-            local("git checkout "+branch)
-
-
-def clear():
+def clear(app='all'):
     """
     clear database and repo for our apps
     """
 
-    for key in apps:
-        if 'database' in apps[key]:
-            clear_database(apps[key]['database'])
-        
-        if 'repo' in apps[key]:
-            with lcd("apps"):
-                local("rm -rf "+key)
+    def remove_repo(repo):
+        """
+        remove repository
+        """
+
+        with lcd("apps"):
+            local("rm -rf "+repo)
+
+    if app == 'all':
+
+        for key in apps.apps:
+            if 'databaseName' in apps.apps[key]:
+                database.clear(apps.apps[key]['databaseName'])
+            
+            if 'repo' in apps.apps[key]:
+                remove_repo(key)
+
+    else:
+        database.clear(apps.apps[app]['databaseName'])
+
+        if 'repo' in apps.apps[app]:
+            remove_repo(app)
 
     
 def server():
     """
-    run our tornado app
+    run server
     """
 
-    run_server(apps)
+    run()
+
 

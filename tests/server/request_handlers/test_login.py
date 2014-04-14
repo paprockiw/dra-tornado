@@ -17,9 +17,8 @@ from tornado.web import Application
 
 from server.request_handlers import login
 
-import pdb
+# import pdb
 
- 
 class Login(AsyncHTTPTestCase):
 
     def get_app(self):
@@ -36,7 +35,7 @@ class Login(AsyncHTTPTestCase):
         return app
 
 
-    def test_case1(self):
+    def test1(self):
         """
         if correct username and password is submited,
         it should return OK and set login cookie
@@ -57,7 +56,7 @@ class Login(AsyncHTTPTestCase):
 
 
 
-    def test_case2(self):
+    def test2(self):
         """
         if incorrect username was submited,
         it should return an error 
@@ -78,7 +77,7 @@ class Login(AsyncHTTPTestCase):
        
         
 
-    def test_case3(self):
+    def test3(self):
         """
         if incorrect password was submited,
         it should return error

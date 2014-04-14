@@ -17,13 +17,12 @@ from server.request_handlers import document
 import pdb
 
  
-class Login(AsyncHTTPTestCase):
+class Document(AsyncHTTPTestCase):
 
     def get_app(self):
         """
         setup tornado application for this test
         """
-
 
         app = Application([(r'/document/(.+)', document.RequestHandler)])
 
@@ -34,7 +33,7 @@ class Login(AsyncHTTPTestCase):
         return app
 
 
-    def test_case1(self):
+    def test1(self):
         """
         it should return a json if correct path was given
         """
@@ -47,16 +46,14 @@ class Login(AsyncHTTPTestCase):
         self.http_client.fetch(request, self.stop)
         response = self.wait()
 
-
         data = json.loads(response.body)
-
 
         assert_equals(type(data),dict)
         assert_equals(response.reason,'OK')
         assert_is_none(response.error)
 
 
-    def test_case2(self):
+    def test2(self):
         """
         it should return a error if wrong path was given
         """
@@ -75,7 +72,7 @@ class Login(AsyncHTTPTestCase):
         assert_is_not_none(response.error)
 
 
-    def test_case3(self):
+    def test3(self):
         """
         it should save data based on path
         """
@@ -108,6 +105,7 @@ class Login(AsyncHTTPTestCase):
         assert_equals(users['password'],'swipe-test')
 
 
+        # set data back
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/users'),\
             method="POST",\
@@ -121,6 +119,7 @@ class Login(AsyncHTTPTestCase):
         assert_is_none(response.error)
 
 
+        # confirm
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/users'),\
             method="GET",

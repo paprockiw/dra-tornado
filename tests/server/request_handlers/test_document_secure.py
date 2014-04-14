@@ -37,7 +37,7 @@ class Pages(AsyncHTTPTestCase):
         return app
 
 
-    def test_1(self):
+    def test1(self):
         """
         it should return a an error if login cookie is not present
         """
@@ -54,7 +54,7 @@ class Pages(AsyncHTTPTestCase):
         assert_equals(response.body,'needs login cookie')
 
 
-    def test_2(self):
+    def test2(self):
         """
         if login cookie is present then it should be able to get data
         """
@@ -70,7 +70,7 @@ class Pages(AsyncHTTPTestCase):
 
         headers = tornado.httputil.HTTPHeaders({"content-type": "text/html"})
 
-        # phony value
+        # set cookie
         headers.add("Cookie", response.headers['Set-Cookie'])
 
         request = tornado.httpclient.HTTPRequest(\
@@ -86,7 +86,7 @@ class Pages(AsyncHTTPTestCase):
 
         headers = tornado.httputil.HTTPHeaders({"content-type": "text/html"})
 
-        # phony value
+        # set phony cookie
         headers.add("Cookie", 'login="dHJ1ZQ==|1397172234|4c3f413903148b7c71c9049c465318bc1ce1234"; Path=/')
 
         request = tornado.httpclient.HTTPRequest(\

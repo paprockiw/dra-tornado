@@ -8,30 +8,33 @@ import os
 import sys
 import copy
 
+import apps
 
-def setup_database(database):
+import pdb
+
+
+def init(key):
     """
     setup couchdb database
     """
 
-    dbName = database.keys()[0]
-
     server = couchdb.Server()
 
-    if dbName not in server:
+    if apps.apps[key]['databaseName'] not in server:
 
-        db = server.create(dbName)
+        db = server.create(apps.apps[key]['databaseName'])
 
-        documents = database[database.keys()[0]]
-
-        for doc in documents:
-            db[doc] = documents[doc]
+        for doc in apps.apps[key]['databaseSchema']:
+            db[doc] = apps.apps[key]['databaseSchema'][doc]
 
 
-def clear_database(name):
+
+def clear(name):
     """
     clear database from couchdb
     """
+
+    
 
     server = couchdb.Server()
 
