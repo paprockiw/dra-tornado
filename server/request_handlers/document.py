@@ -1,12 +1,14 @@
 import json
 
+import urllib
+
 import tornado.web
 
 import tornado.gen
 
 import tornado.httpclient
 
-import pdb
+# import pdb
 
 
 class RequestHandler(tornado.web.RequestHandler):
@@ -19,13 +21,15 @@ class RequestHandler(tornado.web.RequestHandler):
         Gets document. 
         """
 
+        ### get data ###
+
         # database 
         database = param.split('/')[0]
 
         # document _id
         _id = param.split('/')[1]
 
-        # property of document
+        # path of document property 
         path = param.split('/')[2:]
 
         # get the document then extract prop
@@ -34,6 +38,9 @@ class RequestHandler(tornado.web.RequestHandler):
             path=path\
             )
 
+        ### return data ###
+
+        # is data is list then asight to list property
         if type(data) == list:
             self.finish({
                 "list": data
@@ -70,8 +77,12 @@ class RequestHandler(tornado.web.RequestHandler):
             data=data\
             )
 
-        
         self.finish(resp)
+
+
+    def _handle_request_exception(self, e):
+        self.set_status(400)
+        self.finish("tornado threw an exception")
 
 
     def return_error(self,response):
@@ -88,18 +99,21 @@ class RequestHandler(tornado.web.RequestHandler):
         """
         get document then return property specified from path
         """
-        
 
+        ### get data ###
+        
+        # get the document
         doc = yield self.get_doc(url)
 
 
-
+        # get data from property
         data = yield self.get_prop(\
             doc=doc,\
             path=path\
             )
 
 
+        ### return data ###
 
         raise tornado.gen.Return(data)
 
@@ -111,8 +125,16 @@ class RequestHandler(tornado.web.RequestHandler):
         fetches and returns couchdb doc
         """
 
+        ### get document ### 
+
         resp = yield tornado.httpclient.AsyncHTTPClient().fetch(url)
+
+        # convert it to dict
         doc = json.loads(resp.body)
+
+
+        ### return document ###
+
         raise tornado.gen.Return(doc)
 
 
@@ -122,6 +144,7 @@ class RequestHandler(tornado.web.RequestHandler):
         extract data from doc using path
         """
 
+        ### get data from prop using path ###
 
         prop = doc
         for key in path:
@@ -129,6 +152,8 @@ class RequestHandler(tornado.web.RequestHandler):
                 prop = prop[int(key)]
             else:
                 prop = prop[key]
+
+        ### return property ###
 
         raise tornado.gen.Return(prop)
 

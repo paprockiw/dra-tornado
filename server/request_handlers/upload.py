@@ -9,10 +9,6 @@ import tornado.httpclient
 
 from PIL import Image
 
-# add to path so that we can import apps
-path = os.path.realpath(os.path.realpath(__file__) + '/../../../../')
-sys.path.append(path)
-
 from config import config
 
 import pdb
@@ -28,7 +24,7 @@ class RequestHandler(tornado.web.RequestHandler):
     def get(self, path): 
         """ 
         get all upload images
-        """
+        """        
 
         # setup a config file
         files = os.listdir(config['upload']+"/"+path)
@@ -51,6 +47,7 @@ class RequestHandler(tornado.web.RequestHandler):
         move latest uploaded file path and create 4 new images
         """
 
+        # pdb.set_trace()
 
         ### move latest uploaded image ###
 
