@@ -17,7 +17,7 @@ from tornado.web import Application
 
 from server.request_handlers import login
 
-import pdb
+# import pdb
 
 class Login(AsyncHTTPTestCase):
 
@@ -26,8 +26,11 @@ class Login(AsyncHTTPTestCase):
         setup tornado application for this test
         """
 
-        app = Application([(r'/login/(.+)', login.RequestHandler)])
+        app = Application([
+            (r'/login/(.+)', login.RequestHandler)
+        ])
 
+        # for generating cookies
         app.settings = {
             'cookie_secret': 'swipetechnologies'
         }
@@ -52,7 +55,9 @@ class Login(AsyncHTTPTestCase):
 
         assert_equals(response.reason,'OK')
         assert_is_none(response.error)
-        assert_equals('login' in response.headers['Set-Cookie'],True)
+
+        # should have login cookie
+        assert_equals('login' in response.headers['Set-Cookie'], True)
 
 
 

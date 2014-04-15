@@ -1,3 +1,7 @@
+"""
+test document request handler
+"""
+
 import sys
 import json
 
@@ -24,7 +28,9 @@ class Document(AsyncHTTPTestCase):
         setup tornado application for this test
         """
 
-        app = Application([(r'/document/(.+)', document.RequestHandler)])
+        app = Application([
+            (r'/document/(.+)', document.RequestHandler)
+        ])
 
         app.settings = {
             'cookie_secret': 'swipetechnologies'

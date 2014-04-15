@@ -102,6 +102,86 @@ class Pages(AsyncHTTPTestCase):
         assert_equals(response.body,'needs login cookie')
 
 
+    def test3(self):
+        """
+        if secure cookie is present then it should be able to post to request handler
+        """
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/login/admin/administrator/users'),\
+            method="POST",\
+            body=json.dumps({ 'username':'admin', 'password':'swipe' })\
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        headers = tornado.httputil.HTTPHeaders({"content-type": "text/html"})
+
+        # set cookie
+        headers.add("Cookie", response.headers['Set-Cookie'])
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document-secure/admin/administrator/users'),\
+            method="POST",\
+            headers=headers,\
+            body=json.dumps({ 'administrator':'admin-test', 'password':'swipe-test' })\
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        assert_equals(response.reason,'OK')
+        assert_is_none(response.error)
+
+        ## confirm is data was saved ##
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document-secure/admin/administrator/users'),\
+            headers=headers,\
+            method="GET",
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        users = json.loads(response.body)
+
+        assert_equals(users['administrator'],'admin-test')
+        assert_equals(users['password'],'swipe-test')
+
+
+        # set data back
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document-secure/admin/administrator/users'),\
+            method="POST",\
+            headers=headers,\
+            body=json.dumps({ 'administrator':'admin', 'password':'swipe' })\
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        assert_equals(response.reason,'OK')
+        assert_is_none(response.error)
+
+
+        # confirm
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document-secure/admin/administrator/users'),\
+            headers=headers,\
+            method="GET",
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        users = json.loads(response.body)
+
+        assert_equals(users['administrator'],'admin')
+        assert_equals(users['password'],'swipe')
+
+
 
 
 

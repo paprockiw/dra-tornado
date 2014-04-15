@@ -18,18 +18,18 @@ class RequestHandler(document.RequestHandler):
     def post(self, param):
         """
         user post login reqest. 
-        passes in paramiters usernameOrEmail, and password.
+        passes in paramiters username, and password.
         if everything checks out then it finishes connections.
         if anything wrong happens an exception is thrown
         """
 
-        # extact database from path
+        # get database 
         database = param.split('/')[0]
 
-        # extract document _id 
+        # get document _id 
         _id = param.split('/')[1]
 
-        # extact path to property of document 
+        # get path to property of document 
         path = param.split('/')[2:]
 
         # get post data
@@ -53,7 +53,7 @@ class RequestHandler(document.RequestHandler):
             # check if password is correct
             if users['password'] == password:
 
-                # assign secrit cookie
+                # assign secure cookie
                 self.set_secure_cookie("login", 'true',  expires_days=None)
                 self.finish()
 

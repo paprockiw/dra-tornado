@@ -46,9 +46,8 @@ def run():
         if 'routes' in apps.apps[app]:
             for key, value in apps.apps[app]['routes'].iteritems():
                 if route_not_found(key, routes):
-                    routes.append((r"%s" % key, import_module(value['requestHandler'])))
+                    routes.append((r"%s" % key, import_module(value['requestHandler']).RequestHandler))
 
-    
     app = tornado.web.Application(routes)
 
     app.settings = {

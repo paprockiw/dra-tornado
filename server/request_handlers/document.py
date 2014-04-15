@@ -1,3 +1,7 @@
+"""
+request handler for retriving and saveing data to any arbitrary document in a database
+"""
+
 import json
 
 import urllib
@@ -67,7 +71,6 @@ class RequestHandler(tornado.web.RequestHandler):
 
         
         # data for updating the document
-        # data = json.loads(self.get_argument('data'))
         data = json.loads(self.request.body)
         
         # save doc based on data
@@ -81,13 +84,17 @@ class RequestHandler(tornado.web.RequestHandler):
 
 
     def _handle_request_exception(self, e):
+        """
+        exception handler for request handler
+        """
+
         self.set_status(400)
         self.finish("tornado threw an exception")
 
 
     def return_error(self,response):
         """
-        Returns error response to user.
+        sends a custom error response to user.
         """
 
         self.set_status(400)
