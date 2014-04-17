@@ -41,6 +41,9 @@ apps =  {
             "/document-secure/(.+)":{ 
                 'requestHandler': 'server.request_handlers.document_secure'
             },
+            "/pages/(.+)":{ 
+                'requestHandler': 'server.request_handlers.pages'
+            },
             "/orders/(.+)": {
                 'requestHandler': 'server.request_handlers.orders'
             },

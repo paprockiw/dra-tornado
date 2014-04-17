@@ -2,13 +2,7 @@
 *~
 *.pyc
 env
-apps/menu/
-apps/menu-admin/
-apps/comic/
-apps/comic-admin/
-apps/root/
-apps/admin/
-apps/admin-test/
+apps
 nginx
 nginx-src
 nginx-1.3.4.tar.gz
