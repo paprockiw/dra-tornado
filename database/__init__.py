@@ -2,15 +2,19 @@
 module for setting up & clearing couchdb databases
 """
 
-import couchdb
-import couchdb.design
+## system imports
 import os
 import sys
 import copy
+# import pdb
 
-import apps
+## third party imports ##
+import couchdb
+import couchdb.design
 
-import pdb
+## project modules ##
+import apps # handles configuration of our apps
+
 
 
 def init(key):
@@ -20,27 +24,30 @@ def init(key):
 
     server = couchdb.Server()
 
-    if apps.apps[key]['databaseName'] not in server:
+    # if database in not in couchdb
+    if apps.apps[key]['database'] not in server:
 
-        db = server.create(apps.apps[key]['databaseName'])
+        # create database
+        db = server.create(apps.apps[key]['database'])
 
-        for doc in apps.apps[key]['databaseSchema']:
-            db[doc] = apps.apps[key]['databaseSchema'][doc]
+        # load docs in schema
+        for doc in apps.apps[key]['schema']:
+            db[doc] = apps.apps[key]['schema'][doc]
 
 
 
-def clear(name):
+def clear(key):
     """
     clear database from couchdb
     """
 
-    
-
     server = couchdb.Server()
 
-    if name in server:
+    # if there is a database with that name
+    if apps.apps[key]['database'] in server:
 
-        del server[name]
+        # delete if from the server
+        del server[apps.apps[key]['database']]
 
 
 def view_function(path, f_type='map'):

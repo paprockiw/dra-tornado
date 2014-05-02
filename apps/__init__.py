@@ -11,51 +11,45 @@ apps =  {
 
         "branch": "admin",
 
-        "databaseName": "admin",
+        # name of databse
+        "database": "admin",
 
-        "databaseSchema": {
+        # schema of documents in database
+        "schema": {
+
+            # administrator document
             "administrator": {
-                "users": {
-                    "administrator":"admin",
-                    "password":"swipe"
+
+                # pages to our website
+                "pages":{
+                    "pages":[]
                 },
+
+                # data that pages refer to
                 "data": {
                     "blog":{
                         "categories":[]
                     },
                 },
-                "payment": {
-                    "orders":[]
-                },
-                "pages":{
-                    "pages":[]
+
+                # admin info
+                "users": {
+                    "administrator":"admin",
+                    "password":"swipe"
                 }
+   
             }  
         },
 
         # routes for our app
         "routes": {
-            "/login/(.+)":{ 
-                'requestHandler': 'server.request_handlers.login'
-            },
-            "/document-secure/(.+)":{ 
-                'requestHandler': 'server.request_handlers.document_secure'
-            },
-            "/pages/(.+)":{ 
-                'requestHandler': 'server.request_handlers.pages'
-            },
-            "/orders/(.+)": {
-                'requestHandler': 'server.request_handlers.orders'
-            },
-            "/upload/(.+)": {
-                'requestHandler': 'server.request_handlers.upload'
-            },
-            "/comet/(.+)": {
-                'requestHandler': 'server.request_handlers.comet'
-            },
-            "/seo/(.+)": {
-                'requestHandler': 'server.request_handlers.seo'
-            }
+
+            "/login/(.+)": "server.request_handlers.login",
+
+            "/document-secure/(.+)": "server.request_handlers.document_secure",
+            
+            "/pages/(.+)": "server.request_handlers.pages"
+               
         }
     },
 

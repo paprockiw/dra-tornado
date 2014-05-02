@@ -2,16 +2,20 @@
 fab commands for building and deploying our project
 """
 
+## system imports ##
 import os
 import sys
+# import pdb
 
+## third party imports ##
 from fabric.api import task, env, local, lcd
 
-import database
-import apps
-from server import run
+## project modules ##
+import database # handle database actions
+import apps # handles configuration of our apps
+from server import run # handles running tornado server
 
-# import pdb
+
 
 env.hosts = ['localhost']
 
@@ -47,24 +51,25 @@ def init(app='all'):
         for key in apps.apps:
 
             # if app has a database
-            if 'databaseName' in apps.apps[key]:
+            if 'database' in apps.apps[key]:
                 # init database
                 database.init(key)
 
            
             # create app from repo and branch
-            init_app(key,apps.apps[key]['repo'],apps.apps[key]['branch'])
+            init_app(app=key, repo=apps.apps[key]['repo'], branch=apps.apps[key]['branch'])
 
 
     ## init a single app ##
     else:
 
         # get database of app
-        if 'databaseName' in apps.apps[app]:
+        if 'database' in apps.apps[app]:
             database.init(app)
 
         # create app from repo and branch
-        init_app(app, apps.apps[app]['repo'], apps.apps[app]['branch'])
+        init_app(app=app, repo=apps.apps[app]['repo'], branch=apps.apps[app]['branch'])
+
 
 
 def clear(app='all'):
@@ -87,12 +92,12 @@ def clear(app='all'):
         for key in apps.apps:
 
             # if app has a database
-            if 'databaseName' in apps.apps[key]:
+            if 'database' in apps.apps[key]:
 
                 # clear database
-                database.clear(apps.apps[key]['databaseName'])
+                database.clear(key)
             
-            # clear repo from project
+            # remove app from project
             remove_app(key)
 
 
@@ -101,9 +106,9 @@ def clear(app='all'):
 
         # clear database
         if 'databaseName' in apps.apps[app]:
-            database.clear(apps.apps[app]['databaseName'])
+            database.clear(app)
 
-        # clear repo from project
+        # remove app from project
         remove_app(app)
 
     

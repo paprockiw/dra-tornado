@@ -1,4 +1,8 @@
 DRA-fab-tornado-couchdb-redis
 ===========
 
-Backend server framework for building swipe applications based on the Python Tornado framework.
+Backend server framework for building swipe applications 
+based on the Python Tornado framework.
+
+
+nosetests --nocapture mytest.py
