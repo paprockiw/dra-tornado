@@ -1,5 +1,5 @@
 """
-this is cofig object for our app.  it stores some configuration options
+this stores config options for our project
 """
 
 config = {

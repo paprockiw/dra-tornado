@@ -10,7 +10,7 @@ import tornado.gen
 
 import document
 
-# import pdb
+import pdb
 
 class RequestHandler(document.RequestHandler):
 
@@ -21,8 +21,10 @@ class RequestHandler(document.RequestHandler):
         """
 
         ### check to see if secure cookie login is present ###
+
+        # pdb.set_trace()
         
-        login = self.get_secure_cookie("login")
+        login = self.get_cookie("login")
 
         if login == None:
             self.return_error('needs login cookie')

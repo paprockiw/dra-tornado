@@ -9,6 +9,7 @@ cd nginx-1.3.4
 
 export NGX_PREFIX=/home/ubuntu/rpm-tornado/nginx
 
+# mac
 ./configure --prefix=$NGX_PREFIX \
   --with-pcre \
   --with-cc-opt=-I/usr/local/include \
@@ -25,7 +26,7 @@ export NGX_PREFIX=/home/ubuntu/rpm-tornado/nginx
   --with-mail_ssl_module \
   --with-ipv6 
 
-liniux
+# liniux
 ./configure --prefix=$NGX_PREFIX \
   --add-module=../nginx-upload-module  \
   --with-debug \

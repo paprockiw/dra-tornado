@@ -4,6 +4,7 @@ dictionary that we user for setting up our apps
 
 apps =  {
 
+    # admin: admistrator app for our project
     "admin": {
 
         "repo":"https://github.com/ruahman/rpm-angular-react.git",
@@ -32,8 +33,7 @@ apps =  {
             }  
         },
 
-        # request_hander is the only key right now in each sub-dict.
-        # consider moving these to format like /login/(.+) : <REQUEST_HANDLER>
+        # routes for our app
         "routes": {
             "/login/(.+)":{ 
                 'requestHandler': 'server.request_handlers.login'
@@ -59,11 +59,12 @@ apps =  {
         }
     },
 
+    # swipe: client app for our project
     "swipe": {
 
         "repo":"https://github.com/ruahman/rpm-angular-react.git",
 
-        "branch": "master"
+        "branch": "swipe-test"
 
     }
 

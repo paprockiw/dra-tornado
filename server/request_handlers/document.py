@@ -25,6 +25,8 @@ class RequestHandler(tornado.web.RequestHandler):
         Gets document. 
         """
 
+        # pdb.set_trace()
+
         ### get data ###
 
         # database 

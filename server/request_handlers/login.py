@@ -23,6 +23,8 @@ class RequestHandler(document.RequestHandler):
         if anything wrong happens an exception is thrown
         """
 
+        # pdb.set_trace()
+
         # get database 
         database = param.split('/')[0]
 
@@ -46,6 +48,8 @@ class RequestHandler(document.RequestHandler):
             url="http://localhost:5984/"+database+"/"+_id,\
             path=path\
             )
+
+        # pdb.set_trace()
 
         # check is username is administrator
         if username == users['administrator']:
