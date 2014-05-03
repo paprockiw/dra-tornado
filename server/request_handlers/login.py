@@ -49,7 +49,7 @@ class RequestHandler(document.RequestHandler):
             path=path\
             )
 
-#        pdb.set_trace()
+        # pdb.set_trace()
 
         # check is username is administrator
         if username == users['administrator']:

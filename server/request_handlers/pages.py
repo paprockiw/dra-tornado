@@ -20,7 +20,7 @@ class RequestHandler(document.RequestHandler):
         Gets document based on path. 
         """
         
-        self.return_error('hay stop trying to hack me')
+        self.custom_error_response('hay stop trying to hack me')
 
     @tornado.web.asynchronous
     def put(self, param):
@@ -28,7 +28,7 @@ class RequestHandler(document.RequestHandler):
         Gets document based on path. 
         """
         
-        self.return_error('hay stop trying to hack me')
+        self.custom_error_response('hay stop trying to hack me')
 
 
 

@@ -24,10 +24,10 @@ class RequestHandler(document.RequestHandler):
 
         # pdb.set_trace()
         
-        login = self.get_cookie("login")
+        login = self.get_secure_cookie("login")
 
         if login == None:
-            self.return_error('needs login cookie')
+            self.custom_error_response('needs login cookie')
 
 
 
