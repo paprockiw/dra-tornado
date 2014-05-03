@@ -44,12 +44,12 @@ class RequestHandler(document.RequestHandler):
         password = data['password']
 
         # get users 
-        users = yield self.get_data(\
+        users, cache = yield self.get_data(\
             url="http://localhost:5984/"+database+"/"+_id,\
             path=path\
             )
 
-        # pdb.set_trace()
+#        pdb.set_trace()
 
         # check is username is administrator
         if username == users['administrator']:
@@ -64,12 +64,12 @@ class RequestHandler(document.RequestHandler):
             # incorect password
             else:
 
-                self.return_error('incorect password')
+                self.custom_error_response('incorect password')
 
         # incorrect username
         else:
 
-            self.return_error('incorect username')
+            self.custom_error_response('incorect username')
 
 
         
