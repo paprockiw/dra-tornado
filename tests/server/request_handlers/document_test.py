@@ -188,7 +188,77 @@ class Document(AsyncHTTPTestCase):
         cached it to redis
         """
 
-        print "test4"
+        ### make requset ###
+
+        # this should clear cache if there was one 
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document/admin/administrator/users'),\
+            method="POST",\
+            body=json.dumps({ 'administrator':'admin-test', 'password':'swipe-test' })\
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+
+        ## confirm that cache was cleared ##
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document/admin/administrator/users'),\
+            method="GET",
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        data = json.loads(response.body)
+
+        assert_equals(data['cached'], False)
+
+
+        ## call it again and this time it should be true ##
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document/admin/administrator/users'),\
+            method="GET",
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        data = json.loads(response.body)
+
+        assert_equals(data['cached'], True)
+
+
+        ## if I do a post then it should clear the cache ##
+
+        # this should clear cache if there was one 
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document/admin/administrator/users'),\
+            method="POST",\
+            body=json.dumps({ 'administrator':'admin', 'password':'swipe' })\
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+
+        ## confirm that cache was cleared ##
+
+        request = tornado.httpclient.HTTPRequest(\
+            url=self.get_url('/document/admin/administrator/users'),\
+            method="GET",
+            )
+
+        self.http_client.fetch(request, self.stop)
+        response = self.wait()
+
+        data = json.loads(response.body)
+
+        assert_equals(data['cached'], False)
+
+        
 
 
         

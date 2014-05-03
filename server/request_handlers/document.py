@@ -127,13 +127,13 @@ class RequestHandler(tornado.web.RequestHandler):
         data = redisServer.get(url+"/"+"/".join(path))
         
         if data != None:
-            print "cached"
+            
             data = json.loads(data)
 
             raise tornado.gen.Return((data,True))
 
         else:
-            print "couchdb"
+            
             # get the document
             doc = yield self.get_doc(url)
 
