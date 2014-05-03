@@ -8,7 +8,7 @@ import json
 import urllib
 import redis
 
-import pdb
+# import pdb
 
 
 ## third party imports ##
@@ -50,7 +50,7 @@ class RequestHandler(tornado.web.RequestHandler):
         path = param.split('/')[2:]
 
         # get data from document
-        data, cached = yield self.get_data(\
+        data, cache = yield self.get_data(\
             url="http://localhost:5984/"+database+"/"+_id,\
             path=path\
             )
@@ -61,7 +61,7 @@ class RequestHandler(tornado.web.RequestHandler):
         
         self.finish({
             "resp": data,
-            "cached": cached
+            "cache": cache
             })
        
 
@@ -122,16 +122,17 @@ class RequestHandler(tornado.web.RequestHandler):
 
         ### get data ###
 
-        # pdb.set_trace()
-
+        # first check to see if redis has the data
         data = redisServer.get(url+"/"+"/".join(path))
         
+        # if data is already in redis
         if data != None:
             
             data = json.loads(data)
 
-            raise tornado.gen.Return((data,True))
+            raise tornado.gen.Return((data, True))
 
+        # else get the data from couchdb
         else:
             
             # get the document
@@ -143,17 +144,10 @@ class RequestHandler(tornado.web.RequestHandler):
                 path=path\
                 )
 
-            # pdb.set_trace()
-
+            # cache data in redis
             redisServer.set(url+"/"+"/".join(path), json.dumps(data))
 
-            raise tornado.gen.Return((data,False))
-
-
-
-        ### return data ###
-
-        
+            raise tornado.gen.Return((data, False))
 
 
 
@@ -221,7 +215,7 @@ class RequestHandler(tornado.web.RequestHandler):
             )
 
         # clear it from redis
-        redisServer.delete(url+"/"+"/".join(path))
+        redisServer.flushall()
 
         # return responce
         raise tornado.gen.Return(resp)
