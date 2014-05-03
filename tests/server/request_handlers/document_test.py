@@ -1,27 +1,42 @@
 """
 test document request handler
+
+needs admin database setup inorder for tests to work
 """
+
+## system imports ##
 
 import sys
 import json
-
 import unittest
+import mock
+
+import pdb
+
+
+## third party import ##
 
 from nose.tools import assert_equals
 from nose.tools import assert_is_none
 from nose.tools import assert_is_not_none
 
-
 import tornado
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
 
+
+## project imports ##
+
 from server.request_handlers import document
 
-import pdb
+
 
  
 class Document(AsyncHTTPTestCase):
+    """
+    this is the request handler for reteiving and saving data to 
+    any document in a database, based on path
+    """
 
     def get_app(self):
         """
@@ -44,6 +59,8 @@ class Document(AsyncHTTPTestCase):
         it should return a json if correct path was given
         """
 
+        ### make requset ###
+
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/pages'),\
             method="GET",
@@ -52,17 +69,28 @@ class Document(AsyncHTTPTestCase):
         self.http_client.fetch(request, self.stop)
         response = self.wait()
 
+        ### test response ###
+
         data = json.loads(response.body)
 
-        assert_equals(type(data),dict)
-        assert_equals(response.reason,'OK')
+        # response is a json
+        assert_equals(type(data), dict)
+
+        # response is okay
+        assert_equals(response.reason, 'OK')
+
+        # there where no errors
         assert_is_none(response.error)
+
+        
 
 
     def test2(self):
         """
         it should return a error if wrong path was given
         """
+
+        ### make requset ###
 
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/wrong/path'),\
@@ -72,9 +100,16 @@ class Document(AsyncHTTPTestCase):
         self.http_client.fetch(request, self.stop)
         response = self.wait()
 
+
+        ### test response ###
+
+        # it should return this messsage
         assert_equals(response.body,'tornado threw an exception')
 
+        # reason shold be Bad Request
         assert_equals(response.reason,'Bad Request')
+
+        # there where errors
         assert_is_not_none(response.error)
 
 
@@ -82,6 +117,8 @@ class Document(AsyncHTTPTestCase):
         """
         it should save data based on path
         """
+
+        ### make requset ###
 
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/users'),\
@@ -91,6 +128,8 @@ class Document(AsyncHTTPTestCase):
 
         self.http_client.fetch(request, self.stop)
         response = self.wait()
+
+        ### test response ###
 
         assert_equals(response.reason,'OK')
         assert_is_none(response.error)
@@ -105,13 +144,14 @@ class Document(AsyncHTTPTestCase):
         self.http_client.fetch(request, self.stop)
         response = self.wait()
 
-        users = json.loads(response.body)
+        data = json.loads(response.body)
 
-        assert_equals(users['administrator'],'admin-test')
-        assert_equals(users['password'],'swipe-test')
+        assert_equals(data['resp']['administrator'],'admin-test')
+        assert_equals(data['resp']['password'],'swipe-test')
 
 
-        # set data back
+        ## set data back ##
+
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/users'),\
             method="POST",\
@@ -125,7 +165,8 @@ class Document(AsyncHTTPTestCase):
         assert_is_none(response.error)
 
 
-        # confirm
+        ## confirm that data was setback ##
+
         request = tornado.httpclient.HTTPRequest(\
             url=self.get_url('/document/admin/administrator/users'),\
             method="GET",
@@ -134,10 +175,20 @@ class Document(AsyncHTTPTestCase):
         self.http_client.fetch(request, self.stop)
         response = self.wait()
 
-        users = json.loads(response.body)
+        data = json.loads(response.body)
 
-        assert_equals(users['administrator'],'admin')
-        assert_equals(users['password'],'swipe')
+        assert_equals(data['resp']['administrator'],'admin')
+        assert_equals(data['resp']['password'],'swipe')
+
+
+    def test4(self):
+        """
+        when ever we do a get we should cached it to redis,
+        if it's not in cached get data from couchdb and then
+        cached it to redis
+        """
+
+        print "test4"
 
 
         
