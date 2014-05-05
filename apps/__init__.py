@@ -7,7 +7,7 @@ apps =  {
     # admin: admistrator app for our project
     "admin": {
 
-        "repo":"https://github.com/ruahman/rpm-angular-react.git",
+        "repo":"https://github.com/ruahman/rpm-angular-polymer-react.git",
 
         "branch": "admin",
 
@@ -56,9 +56,9 @@ apps =  {
     # swipe: client app for our project
     "swipe": {
 
-        "repo":"https://github.com/ruahman/rpm-angular-react.git",
+        "repo":"https://github.com/ruahman/rpm-angular-polymer-react.git",
 
-        "branch": "swipe-test"
+        "branch": "master"
 
     }
 
