@@ -1,7 +1,7 @@
 DRA-fabric-tornado-couchdb-redis
 ===========
 
-This is a **DRA** project using python fabric, tornado, couchdb and redis.
+This is a **DRA** project using python, fabric, tornado, couchdb and redis.
 
 **DRA** implements the backend end side to **Swipe CMS**.
 
@@ -84,24 +84,18 @@ the **RPM** apps has everything it needs to create a website.
 
 - - -
 
-this project has two branches.
+to get the project running
 
-*master*, and *admin*.
+install couchdb and redis
 
-*admin*: is a rpm app that implements the admin piece to your site
+1.  clone this repo
+2.  cd into the project
+3.  pip install virtualenv
+4.  virtualenv env
+5.  source env/bin/activate
+6.  pip install -r requirements.txt
+7.  fab init
+8.  fab server
 
-*master*: is a rpm project that implements the client piece to your site
 
-
-to get started
-
-1. install node.js and npm
-2. gem install compass
-3. clone this project 
-4. cd to your project and checkout the appropriate branch
-3. npm install
-4. bower install
-5. grunt build
-
-then Happy Hacking :)
 
