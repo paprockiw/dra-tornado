@@ -48,7 +48,9 @@ apps =  {
 
             "/document-secure/(.+)": "server.request_handlers.document_secure",
             
-            "/pages/(.+)": "server.request_handlers.pages"
+            "/pages/(.+)": "server.request_handlers.pages",
+
+            "/upload/(.+)": "server.request_handlers.upload"
                
         }
     },

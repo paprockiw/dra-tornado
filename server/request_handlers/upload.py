@@ -33,7 +33,7 @@ class RequestHandler(tornado.web.RequestHandler):
         filesFilter = [file for file in files if file != '.DS_Store']
 
         response = {
-            "files": filesFilter
+            "resp": filesFilter
         }
 
 
@@ -47,7 +47,6 @@ class RequestHandler(tornado.web.RequestHandler):
         move latest uploaded file path and create 4 new images
         """
 
-        # pdb.set_trace()
 
         ### move latest uploaded image ###
 
@@ -63,12 +62,6 @@ class RequestHandler(tornado.web.RequestHandler):
 
         ### create 6 new images ###
 
-        # sizes = {
-        #     "thum": (180, 180),
-        #     "phone": (480,480),
-        #     "tablet": (768,768),
-        #     "desktop": (980,980),
-        # }
 
         sizes = {
             "thum": (180, 180),
@@ -76,8 +69,6 @@ class RequestHandler(tornado.web.RequestHandler):
             "phone_highres": (976,976),
             "tablet": (768,768),
             "tablet_highres": (1536,1536),
-            "desktop": (1200,1200),
-            "desktop_highres": (2000,2000),
         }
 
 
@@ -97,7 +88,7 @@ class RequestHandler(tornado.web.RequestHandler):
             im.save(config['upload']+"/"+path+"/"+key+"/"+file_name)
 
         
-        self.finish({})
+        self.finish()
 
 
     
